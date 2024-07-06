@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shady URL Generator</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <style>
+    body {
+      background-color: #f5f5f5;
+    }
+
+    .container {
+      margin-top: 50px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .row {
+      margin-bottom: 20px;
+    }
+
+    .result {
+      text-align: center;
+      font-weight: bold;
+      margin-top: 30px;
+    }
+
+    .btn {
+      margin-right: 10px;
+    }
+
+    .btn i {
+      margin-left: 5px;
+    }
+
+    .helper-text {
+      color: red;
+    }
+
+    .input-field input[type="text"]:focus+label {
+      color: #1976d2;
+    }
+
+    .input-field input[type="text"]:focus {
+      border-bottom: 1px solid #1976d2;
+      box-shadow: 0 1px 0 0 #1976d2;
+    }
+
+    .input-field input[type="text"]:valid+label {
+      color: #1976d2;
+    }
+
+    .input-field input[type="text"]:valid {
+      border-bottom: 1px solid #1976d2;
+      box-shadow: 0 1px 0 0 #1976d2;
+    }
+
+    .loader {
+      border: 4px solid #f3f3f3;
+      border-radius: 50%;
+      border-top: 4px solid #3498db;
+      width: 20px;
+      height: 20px;
+      animation: spin 2s linear infinite;
+      margin-left: 10px;
+      display: none;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        margin-top: 20px;
+      }
+
+      h1 {
+        font-size: 24px;
+        margin-bottom: 20px;
+      }
+
+      .row {
+        margin-bottom: 10px;
+      }
+
+      .result {
+        margin-top: 20px;
+      }
+
+      .btn {
+        margin-right: 5px;
+      }
+
+      .btn i {
+        margin-left: 3px;
+      }
+
+      .input-field input[type="text"]:focus+label {
+        font-size: 14px;
+      }
+
+      .input-field input[type="text"]:focus {
+        border-bottom: 1px solid #1976d2;
+        box-shadow: 0 1px 0 0 #1976d2;
+      }
+
+      .input-field input[type="text"]:valid+label {
+        font-size: 14px;
+      }
+
+      .input-field input[type="text"]:valid {
+        border-bottom: 1px solid #1976d2;
+        box-shadow: 0 1px 0 0 #1976d2;
+      }
+
+      .input-field input[type="text"] {
+        height: 40px;
+      }
+
+      .loader {
+        width: 15px;
+        height: 15px;
+        margin-left: 5px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Shady URL Generator</h1>
+    <form class="col s12" onsubmit="return false;">
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="url" type="text" class="validate" aria-describedby="url-helper" required>
+          <label for="url">Enter URL</label>
+          <span id="url-helper" class="helper-text" data-error="Invalid URL"></span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s12">
+          <button class="btn waves-effect waves-light" type="button" onclick="generateShadyURL()">Generate Shady URL
+            <i class="material-icons right">send</i>
+            <div class="loader" id="loader"></div>
+          </button>
+          <button id="copy-button" class="btn waves-effect waves-light" type="button" onclick="copyToClipboard()"
+            disabled>Copy Shady URL
+            <i class="material-icons right">content_copy</i>
+          </button>
+          <button class="btn waves-effect waves-light" type="button" onclick="resetForm()">Reset
+            <i class="material-icons right">refresh</i>
+          </button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s12">
+          <p class="result" id="result" aria-live="polite"></p>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script>
+    function generateShadyURL() {
+      var urlInput = document.getElementById("url");
+      var url = urlInput.value;
+
+      if (!isValidURL(url)) {
+        M.toast({ html: 'Invalid URL', classes: 'red' });
+        document.getElementById("url-helper").style.display = 'block';
+        return;
+      }
+
+      document.getElementById("loader").style.display = 'inline-block';
+      setTimeout(() => {
+        document.getElementById("loader").style.display = 'none';
+        var shadyURL = generateRandomShadyUrl();
+        document.getElementById("result").innerHTML = "Shady URL: <a href='" + url + "' target='_blank'>" + shadyURL + "</a>";
+        document.getElementById("copy-button").disabled = false;
+      }, 1000);
+    }
+
+    function isValidURL(url) {
+      var pattern = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})(\/.*)?$/;
+      return pattern.test(url);
+    }
+
+    function generateRandomShadyUrl() {
+      const words = [
+        'twink', 'trmp', 'weeabo', 'arsonporn', 'ttrjn', 'heroin', 'playtime', 'download',
+        'negro', 'isis', 'dark-net', 'ntsfe', 'stream', 'ethnic', 'kjllx', 'tentacle',
+        'fun-time', 'brck', 'crippled-children', 'tr0jan', 'necro', 'hhntai', 'white',
+        'p0wer', 'free-samples', 'sexual', 'kkk', 'cheap-krokodil', 'join-isis', 'request-form',
+        'live', 'fdyi', 'hentai-club', 'torr3nt', 'weeb', 'ygszz', '8o1la', 'cuck', 'ijkz', 'ntok', 'glkz',
+        'darkweb', 'illegal', 'hack', 'phishing', 'malware', 'spyware', 'ransomware', 'scam',
+        'fraud', 'blackmarket', 'contraband', 'smuggle', 'pirate', 'bootleg', 'underground',
+        'forbidden', 'banned', 'prohibited', 'illicit', 'unlawful', 'counterfeit', 'fake-id',
+        'identity-theft', 'credit-card', 'drug-dealer', 'hitman', 'assassin', 'extortion', 'bribe',
+        'money-laundering', 'cybercrime', 'darknet', 'deepweb', 'hidden-service', 'anonymity',
+        'tor', 'vpn', 'proxy', 'bitcoin', 'cryptocurrency', 'blackhat', 'exploit', 'zero-day',
+        'rootkit', 'keylogger', 'backdoor', 'trojan', 'worm', 'virus', 'botnet', 'ddos', 'phreaking',
+        'carding', 'skimming', 'dump', 'track1', 'track2', 'fullz', 'cvv', 'ssn', 'passport', 'driver-license'
+      ];
+
+      const randomWord = () => words.splice(Math.floor(Math.random() * words.length), 1)[0];
+
+      let shadyUrl = 'http://6h2.xyz/';
+      const parts = [];
+      for (let i = 0; i < 5; i++) {
+        parts.push(randomWord());
+      }
+
+      shadyUrl += parts.join('_') + '.';
+      return shadyUrl;
+    }
+
+    function copyToClipboard() {
+      var resultElement = document.getElementById("result");
+      var shadyURL = resultElement.querySelector("a").innerText;
+
+      var tempInput = document.createElement("input");
+      tempInput.value = shadyURL;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      document.execCommand("copy");
+      document.body.removeChild(tempInput);
+
+      M.toast({ html: 'Shady URL copied to clipboard: ' + shadyURL, classes: 'green' });
+    }
+
+    function resetForm() {
+      document.getElementById("url").value = "";
+      document.getElementById("result").innerHTML = "";
+      document.getElementById("copy-button").disabled = true;
+      document.getElementById("url-helper").style.display = 'none';
+    }
+  </script>
+</body>
+
+</html>
